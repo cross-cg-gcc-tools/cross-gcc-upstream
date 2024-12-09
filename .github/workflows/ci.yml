@@ -84,3 +84,15 @@ jobs:
           file: /home/runner/x-tools/gcc-${{ matrix.arch.name }}-13.deb
           asset_name: gcc-${{ matrix.arch.name }}-13.deb
           tag: master-${{ steps.tag_name.outputs.TAG_NAME }}
+
+  trigger-ci-tests:
+    runs-on: ubuntu-22.04
+    needs: build
+
+    steps:
+      - name: Run test CI
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.PAT }}
+          repository: cross-cg-gcc-tools/cross-gcc-upstream-tests
+          event-type: run-tests
